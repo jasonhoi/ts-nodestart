@@ -1,0 +1,16 @@
+{
+  "name": "ts-nodestart",
+  "version": "1.0.0",
+  "description": "Starter Node project in Typescript.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Jason Hoi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.11",
+    "typescript": "^4.9.3"
+  }
+}
