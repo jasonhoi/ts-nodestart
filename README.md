@@ -7,6 +7,9 @@ Please create your own free account at [Alchemy](https://www.alchemy.com/), then
 
 ```bash
 
+# create your environment file and put in your RPC api url
+cp .env-sample .env
+
 # install node modules
 npm i
 
