@@ -11,7 +11,7 @@ import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' 
 import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
 
 const provider = new ethers.providers.JsonRpcProvider(
-    'https://eth-mainnet.g.alchemy.com/v2/iqu32azgIW6rO0Snc55IjqMV24Zv7kUa'
+    'https://eth-mainnet.g.alchemy.com/v2/jAbwWs8QcTpbiQ70ovpelRWJr5bLkx83'
 );
 
 // USDC-WETH pool address on mainnet for fee tier 0.05%
