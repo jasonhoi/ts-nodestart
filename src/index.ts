@@ -1,4 +1,5 @@
-import * as dotenv from 'dotenv';
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config();
 
 import { ethers } from 'ethers';
 import { Pool } from '@uniswap/v3-sdk';
@@ -10,9 +11,7 @@ import { Trade } from '@uniswap/v3-sdk';
 import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' };
 import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
 
-const provider = new ethers.providers.JsonRpcProvider(
-    'https://eth-mainnet.g.alchemy.com/v2/jAbwWs8QcTpbiQ70ovpelRWJr5bLkx83'
-);
+const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
 // USDC-WETH pool address on mainnet for fee tier 0.05%
 const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
