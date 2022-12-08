@@ -1,2 +1,0 @@
-read file line 1
-read file line 2

@@ -1,12 +1,18 @@
+import * as dotenv from 'dotenv';
+
 import { ethers } from 'ethers';
 import { Pool } from '@uniswap/v3-sdk';
 import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core';
-import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
+// import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
 import { Route } from '@uniswap/v3-sdk';
 import { Trade } from '@uniswap/v3-sdk';
-import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
+// import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
+import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' };
+import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
 
-const provider = new ethers.providers.JsonRpcProvider('<YOUR-ENDPOINT-HERE>');
+const provider = new ethers.providers.JsonRpcProvider(
+    'https://eth-mainnet.g.alchemy.com/v2/iqu32azgIW6rO0Snc55IjqMV24Zv7kUa'
+);
 
 // USDC-WETH pool address on mainnet for fee tier 0.05%
 const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
