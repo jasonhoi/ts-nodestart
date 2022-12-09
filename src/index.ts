@@ -18,9 +18,7 @@ import * as Uniswap from './services/uniswap.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const provider = new ethers.providers.JsonRpcProvider(
-    'https://rpc.flashbots.net'
-);
+const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
 // connect to Uniswap v3 pool contract (USDC-SNX pool)
 const poolAddress = '0x020c349a0541d76c16f501abc6b2e9c98adae892';
