@@ -1,102 +1,44 @@
-import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config();
+/**
+ * Tutorial: https://docs.uniswap.org/sdk/v3/guides/creating-a-trade)
+ *
+ * import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
+ * import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
+ * @dev In Typescript Node project, importing json files as ES module is highly experimental
+ *      at this moment, I manually copy out the ABI from /node_modules/@uniswap/v3-* into /scr/abi/*.json.
+ *
+ */
 
+// Always try to put your api keys or secrets into .env file, and git ignore the file from soure code repo.
 import { ethers } from 'ethers';
 import { Pool, Route, Trade } from '@uniswap/v3-sdk';
 import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' };
 import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
-// import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
-// import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
+import * as Uniswap from './services/uniswap.js';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-// hard-coded to used flashbots public ETH RPC
 const provider = new ethers.providers.JsonRpcProvider(
     'https://rpc.flashbots.net'
 );
-// use following line if you want to use .env
-// const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
-// USDC-WETH pool address on mainnet for fee tier 0.05%
+// connect to Uniswap v3 pool contract (USDC-WETH pool address on mainnet for fee tier 0.05%)
 const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
-
 const poolContract = new ethers.Contract(
     poolAddress,
     IUniswapV3PoolABI,
     provider
 );
 
+// connect to Uniswap v3 Quoter contract
 const quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
-
 const quoterContract = new ethers.Contract(quoterAddress, QuoterABI, provider);
-
-interface Immutables {
-    factory: string;
-    token0: string;
-    token1: string;
-    fee: number;
-    tickSpacing: number;
-    maxLiquidityPerTick: ethers.BigNumber;
-}
-
-interface State {
-    liquidity: ethers.BigNumber;
-    sqrtPriceX96: ethers.BigNumber;
-    tick: number;
-    observationIndex: number;
-    observationCardinality: number;
-    observationCardinalityNext: number;
-    feeProtocol: number;
-    unlocked: boolean;
-}
-
-async function getPoolImmutables() {
-    const [factory, token0, token1, fee, tickSpacing, maxLiquidityPerTick] =
-        await Promise.all([
-            poolContract.factory(),
-            poolContract.token0(),
-            poolContract.token1(),
-            poolContract.fee(),
-            poolContract.tickSpacing(),
-            poolContract.maxLiquidityPerTick(),
-        ]);
-
-    const immutables: Immutables = {
-        factory,
-        token0,
-        token1,
-        fee,
-        tickSpacing,
-        maxLiquidityPerTick,
-    };
-    return immutables;
-}
-
-async function getPoolState() {
-    // note that data here can be desynced if the call executes over the span of two or more blocks.
-    const [liquidity, slot] = await Promise.all([
-        poolContract.liquidity(),
-        poolContract.slot0(),
-    ]);
-
-    const PoolState: State = {
-        liquidity,
-        sqrtPriceX96: slot[0],
-        tick: slot[1],
-        observationIndex: slot[2],
-        observationCardinality: slot[3],
-        observationCardinalityNext: slot[4],
-        feeProtocol: slot[5],
-        unlocked: slot[6],
-    };
-
-    return PoolState;
-}
 
 async function main() {
     // query the state and immutable variables of the pool
     const [immutables, state] = await Promise.all([
-        getPoolImmutables(),
-        getPoolState(),
+        Uniswap.getPoolImmutables(poolContract),
+        Uniswap.getPoolState(poolContract),
     ]);
 
     // create instances of the Token object to represent the two tokens in the given pool
@@ -109,7 +51,7 @@ async function main() {
         TokenA,
         TokenB,
         immutables.fee,
-        state.sqrtPriceX96.toString(), //note the description discrepancy - sqrtPriceX96 and sqrtRatioX96 are interchangable values
+        state.sqrtPriceX96.toString(), // note the description discrepancy - sqrtPriceX96 and sqrtRatioX96 are interchangable values
         state.liquidity.toString(),
         state.tick
     );
