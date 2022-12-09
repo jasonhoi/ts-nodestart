@@ -1,5 +1,5 @@
 /**
- * Tutorial: https://docs.uniswap.org/sdk/v3/guides/creating-a-trade)
+ * Tutorial: https://docs.uniswap.org/sdk/v3/guides/creating-a-trade
  *
  * import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
  * import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
@@ -41,19 +41,8 @@ async function main() {
         Uniswap.getPoolState(poolContract),
     ]);
 
-    // create instances of the Token object to represent the two tokens in the given pool
-    const TokenA = new Token(1, immutables.token0, 6, 'USDC', 'USD Coin');
-    const TokenB = new Token(1, immutables.token1, 18, 'SNX', 'SNX Coin');
-
-    // create an instance of the pool object for the given pool
-    const poolExample = new Pool(
-        TokenA,
-        TokenB,
-        immutables.fee,
-        state.sqrtPriceX96.toString(), // note the description discrepancy - sqrtPriceX96 and sqrtRatioX96 are interchangable values
-        state.liquidity.toString(),
-        state.tick
-    );
+    const TokenIn = immutables.token0;
+    const TokenOut = immutables.token1;
 
     // assign an input amount for the swap
     const amountIn = 100;
@@ -61,27 +50,37 @@ async function main() {
     // call the quoter contract to determine the amount out of a swap, given an amount in
     const quotedAmountOut =
         await quoterContract.callStatic.quoteExactInputSingle(
-            immutables.token0,
-            immutables.token1,
+            TokenIn,
+            TokenOut,
             immutables.fee,
             amountIn.toString(),
             0
         );
-    
-    console.log(`Token A: ${TokenA.name}`);
-    console.log(`Token B: ${TokenB.name}`);
-    console.log(
-        `${TokenA.name}/${TokenB.name} = ${amountIn}/${
-            quotedAmountOut / 10 ** 12
-        }`
-    );
+
+    console.log(`Token A: USDC`);
+    console.log(`Token B: SNX`);
+    console.log(`USDC/SNX = ${amountIn}/${quotedAmountOut / 10 ** 12}`);
     console.log(
         `Exchange rate = ${(quotedAmountOut / (amountIn * 10 ** 12)).toFixed(
             6
         )}`
     );
-    console.log(`Pool fee: ${immutables.fee}`);
-    console.log(`Pool liquidity: ${state.liquidity.toString()}`);
+    // console.log(`Pool fee: ${immutables.fee}`);
+    // console.log(`Pool liquidity: ${state.liquidity.toString()}`);
+
+    // create instances of the Token object to represent the two tokens in the given pool
+    // const TokenA = new Token(1, immutables.token0, 6, 'USDC', 'USD Coin');
+    // const TokenB = new Token(1, immutables.token1, 18, 'SNX', 'SNX Coin');
+
+    // // create an instance of the pool object for the given pool
+    // const poolExample = new Pool(
+    //     TokenA,
+    //     TokenB,
+    //     immutables.fee,
+    //     state.sqrtPriceX96.toString(), // note the description discrepancy - sqrtPriceX96 and sqrtRatioX96 are interchangable values
+    //     state.liquidity.toString(),
+    //     state.tick
+    // );
 
     // // create an instance of the route object in order to construct a trade object
     // const swapRoute = new Route([poolExample], TokenA, TokenB);
