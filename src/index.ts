@@ -22,8 +22,8 @@ const provider = new ethers.providers.JsonRpcProvider(
     'https://rpc.flashbots.net'
 );
 
-// connect to Uniswap v3 pool contract (USDC-WETH pool address on mainnet for fee tier 0.05%)
-const poolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640';
+// connect to Uniswap v3 pool contract (USDC-SNX pool)
+const poolAddress = '0x020c349a0541d76c16f501abc6b2e9c98adae892';
 const poolContract = new ethers.Contract(
     poolAddress,
     IUniswapV3PoolABI,
@@ -42,9 +42,8 @@ async function main() {
     ]);
 
     // create instances of the Token object to represent the two tokens in the given pool
-    const TokenA = new Token(3, immutables.token0, 6, 'USDC', 'USD Coin');
-
-    const TokenB = new Token(3, immutables.token1, 18, 'WETH', 'Wrapped Ether');
+    const TokenA = new Token(1, immutables.token0, 6, 'USDC', 'USD Coin');
+    const TokenB = new Token(1, immutables.token1, 18, 'SNX', 'SNX Coin');
 
     // create an instance of the pool object for the given pool
     const poolExample = new Pool(
@@ -57,7 +56,7 @@ async function main() {
     );
 
     // assign an input amount for the swap
-    const amountIn = 1500;
+    const amountIn = 100;
 
     // call the quoter contract to determine the amount out of a swap, given an amount in
     const quotedAmountOut =
@@ -69,23 +68,37 @@ async function main() {
             0
         );
 
-    // create an instance of the route object in order to construct a trade object
-    const swapRoute = new Route([poolExample], TokenA, TokenB);
+    console.log(`Token A: ${TokenA.name}, Token B: ${TokenB.name}`);
+    console.log(
+        `${TokenA.name}/${TokenB.name} = ${amountIn}/${
+            quotedAmountOut / 10 ** 12
+        }`
+    );
+    console.log(
+        `Exchange rate = ${(quotedAmountOut / (amountIn * 10 ** 12)).toFixed(
+            6
+        )}`
+    );
+    console.log(`Pool fee: ${immutables.fee}`);
+    console.log(`Pool liquidity: ${state.liquidity.toString()}`);
 
-    // create an unchecked trade instance
-    const uncheckedTradeExample = await Trade.createUncheckedTrade({
-        route: swapRoute,
-        inputAmount: CurrencyAmount.fromRawAmount(TokenA, amountIn.toString()),
-        outputAmount: CurrencyAmount.fromRawAmount(
-            TokenB,
-            quotedAmountOut.toString()
-        ),
-        tradeType: TradeType.EXACT_INPUT,
-    });
+    // // create an instance of the route object in order to construct a trade object
+    // const swapRoute = new Route([poolExample], TokenA, TokenB);
 
-    // print the quote and the unchecked trade instance in the console
-    console.log('The quoted amount out is', quotedAmountOut.toString());
-    console.log('The unchecked trade object is', uncheckedTradeExample);
+    // // create an unchecked trade instance
+    // const uncheckedTradeExample = await Trade.createUncheckedTrade({
+    //     route: swapRoute,
+    //     inputAmount: CurrencyAmount.fromRawAmount(TokenA, amountIn.toString()),
+    //     outputAmount: CurrencyAmount.fromRawAmount(
+    //         TokenB,
+    //         quotedAmountOut.toString()
+    //     ),
+    //     tradeType: TradeType.EXACT_INPUT,
+    // });
+
+    // // print the quote and the unchecked trade instance in the console
+    // console.log('The quoted amount out is', quotedAmountOut.toString());
+    // console.log('The unchecked trade object is', uncheckedTradeExample);
 }
 
 main();
