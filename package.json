@@ -5,8 +5,8 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
-        "start": "tsc && node --experimental-json-modules dist/index.js"
+        "build": "./node_modules/typescript/bin/tsc",
+        "start": "./node_modules/typescript/bin/tsc && node --experimental-json-modules dist/index.js"
     },
     "author": "Jason Hoi",
     "license": "MIT",

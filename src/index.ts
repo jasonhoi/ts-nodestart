@@ -2,14 +2,12 @@ import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 
 import { ethers } from 'ethers';
-import { Pool } from '@uniswap/v3-sdk';
+import { Pool, Route, Trade } from '@uniswap/v3-sdk';
 import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core';
-import { Route } from '@uniswap/v3-sdk';
-import { Trade } from '@uniswap/v3-sdk';
-// import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
-// import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
 import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' };
 import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
+// import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json' assert { type: 'json' };
+// import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json' assert { type: 'json' };
 
 // hard-coded to used flashbots public ETH RPC
 const provider = new ethers.providers.JsonRpcProvider(
