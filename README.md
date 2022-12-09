@@ -19,7 +19,7 @@ cp .env-sample .env
 npm install -g typescript
 
 # install node modules
-npm i
+npm install
 
 # build ts to js
 npm run build
