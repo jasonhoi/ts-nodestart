@@ -67,8 +67,9 @@ async function main() {
             amountIn.toString(),
             0
         );
-
-    console.log(`Token A: ${TokenA.name}, Token B: ${TokenB.name}`);
+    
+    console.log(`Token A: ${TokenA.name}`);
+    console.log(`Token B: ${TokenB.name}`);
     console.log(
         `${TokenA.name}/${TokenB.name} = ${amountIn}/${
             quotedAmountOut / 10 ** 12
