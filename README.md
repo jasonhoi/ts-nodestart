@@ -1,11 +1,16 @@
 # Typescript node project
 
-This project use Uniswap V3 [create a trade](https://docs.uniswap.org/sdk/v3/guides/creating-a-trade) sample script as an example.
+This project use Node.js v18+, using experimental json file import as ES module.
 
-Please create your own free account at [Alchemy](https://www.alchemy.com/), then insert your ETH RPC address at 
-`const provider = new ethers.providers.JsonRpcProvider(xxx)`
+The sample code comes from Uniswap V3 [create a trade](https://docs.uniswap.org/sdk/v3/guides/creating-a-trade).
+
+Please create your own free account at [Alchemy](https://www.alchemy.com/), insert the HTTPS RPC endpoint at `src/index.ts`, line `const provider = new ethers.providers.JsonRpcProvider({RPC_endpoint})`.
 
 ```bash
+
+# make sure you installed Node.js v18+ (in order to support import json file as ES6 module)
+node -v
+# sample output: v18.12.1
 
 # create your environment file and put in your RPC api url
 cp .env-sample .env
