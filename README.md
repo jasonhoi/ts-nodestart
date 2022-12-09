@@ -15,6 +15,9 @@ node -v
 # create your environment file and put in your RPC api url
 cp .env-sample .env
 
+# install tsc (typescript) as global npm module
+npm install -g typescript
+
 # install node modules
 npm i
 
