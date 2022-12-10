@@ -18,19 +18,24 @@ import * as Uniswap from './services/uniswap.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+const parseUnits = ethers.utils.parseUnits;
+
 const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
-// connect to Uniswap v3 pool contract (USDC-SNX pool)
-const poolAddress = '0x020c349a0541d76c16f501abc6b2e9c98adae892';
+// connect to Uniswap v3 Quoter contract
+const quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
+const quoterContract = new ethers.Contract(quoterAddress, QuoterABI, provider);
+
+// connect to Uniswap v3 pool contract
+// 0xc63b0708e2f7e69cb8a1df0e1389a98c35a76d52 = FRAX/USDC
+// 0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8 = USDC/ETH
+// 0xcbcdf9626bc03e24f779434178a73a0b4bad62ed = WBTC/ETH
+const poolAddress = '0xc63b0708e2f7e69cb8a1df0e1389a98c35a76d52';
 const poolContract = new ethers.Contract(
     poolAddress,
     IUniswapV3PoolABI,
     provider
 );
-
-// connect to Uniswap v3 Quoter contract
-const quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
-const quoterContract = new ethers.Contract(quoterAddress, QuoterABI, provider);
 
 async function main() {
     // query the state and immutable variables of the pool
@@ -39,64 +44,54 @@ async function main() {
         Uniswap.getPoolState(poolContract),
     ]);
 
-    const TokenIn = immutables.token0;
-    const TokenOut = immutables.token1;
+    const TokenIn = new Token(1, immutables.token0, 18, 'FRAX', '');
+    const TokenOut = new Token(1, immutables.token1, 6, 'USDC', '');
 
     // assign an input amount for the swap
-    const amountIn = 100;
+    const amountInFloat = 10;
+    const amountIn = parseUnits(amountInFloat.toFixed(4), TokenIn.decimals);
 
     // call the quoter contract to determine the amount out of a swap, given an amount in
+    // Uniswap V3 provide at least 4 fee tiers: 100 = 0.01%(very stable pair), 500 = 0.05%, 3000 = 0.3%, 10000 = 1%
     const quotedAmountOut =
         await quoterContract.callStatic.quoteExactInputSingle(
-            TokenIn,
-            TokenOut,
+            TokenIn.address,
+            TokenOut.address,
             immutables.fee,
             amountIn.toString(),
             0
         );
 
-    console.log(`Token A: USDC`);
-    console.log(`Token B: SNX`);
-    console.log(`USDC/SNX = ${amountIn}/${quotedAmountOut / 10 ** 12}`);
+    const quoteDecimalPlace = 4;
+    const quotedAmountOutFloat =
+        parseFloat(
+            quotedAmountOut
+                .div(parseUnits('1', TokenOut.decimals - quoteDecimalPlace))
+                .toString()
+        ) /
+        10 ** quoteDecimalPlace;
+
     console.log(
-        `Exchange rate = ${(quotedAmountOut / (amountIn * 10 ** 12)).toFixed(
-            6
-        )}`
+        '--------------------------- Uniswap V3 exchange quote ---------------------------'
     );
-    // console.log(`Pool fee: ${immutables.fee}`);
-    // console.log(`Pool liquidity: ${state.liquidity.toString()}`);
-
-    // create instances of the Token object to represent the two tokens in the given pool
-    // const TokenA = new Token(1, immutables.token0, 6, 'USDC', 'USD Coin');
-    // const TokenB = new Token(1, immutables.token1, 18, 'SNX', 'SNX Coin');
-
-    // // create an instance of the pool object for the given pool
-    // const poolExample = new Pool(
-    //     TokenA,
-    //     TokenB,
-    //     immutables.fee,
-    //     state.sqrtPriceX96.toString(), // note the description discrepancy - sqrtPriceX96 and sqrtRatioX96 are interchangable values
-    //     state.liquidity.toString(),
-    //     state.tick
-    // );
-
-    // // create an instance of the route object in order to construct a trade object
-    // const swapRoute = new Route([poolExample], TokenA, TokenB);
-
-    // // create an unchecked trade instance
-    // const uncheckedTradeExample = await Trade.createUncheckedTrade({
-    //     route: swapRoute,
-    //     inputAmount: CurrencyAmount.fromRawAmount(TokenA, amountIn.toString()),
-    //     outputAmount: CurrencyAmount.fromRawAmount(
-    //         TokenB,
-    //         quotedAmountOut.toString()
-    //     ),
-    //     tradeType: TradeType.EXACT_INPUT,
-    // });
-
-    // // print the quote and the unchecked trade instance in the console
-    // console.log('The quoted amount out is', quotedAmountOut.toString());
-    // console.log('The unchecked trade object is', uncheckedTradeExample);
+    console.log(
+        `Token In: ${TokenIn.symbol}, decimal place ${TokenIn.decimals}, contract ${TokenIn.address}`
+    );
+    console.log(
+        `Token Out: ${TokenOut.symbol}, decimal place ${TokenOut.decimals}, contract ${TokenOut.address}`
+    );
+    console.log(
+        `${TokenIn.symbol} : ${TokenOut.symbol} = ${amountInFloat.toFixed(
+            4
+        )} : ${quotedAmountOutFloat.toFixed(quoteDecimalPlace)}`
+    );
+    console.log(
+        `Ex. rate (out amount/in amount) = ${
+            quotedAmountOutFloat / amountInFloat
+        }`
+    );
+    console.log(`Pool fee tier: ${immutables.fee / 10000}%`);
+    console.log(`Pool liquidity: ${state.liquidity.toString()}`);
 }
 
 main();
