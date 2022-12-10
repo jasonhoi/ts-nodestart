@@ -10,26 +10,28 @@
 
 // Always try to put your api keys or secrets into .env file, and git ignore the file from soure code repo.
 import { ethers } from 'ethers';
-import { Pool, Route, Trade } from '@uniswap/v3-sdk';
-import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core';
+import { Token } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from './abi/IUniswapV3Pool.json' assert { type: 'json' };
 import QuoterABI from './abi/Quoter.json' assert { type: 'json' };
 import * as Uniswap from './services/uniswap.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// shortcut alias
 const parseUnits = ethers.utils.parseUnits;
 
+// ETH RPC network provider
+// const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 const provider = new ethers.providers.JsonRpcProvider(
     'https://rpc.flashbots.net'
 );
-// const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
 // connect to Uniswap v3 Quoter contract
 const quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
 const quoterContract = new ethers.Contract(quoterAddress, QuoterABI, provider);
 
 // connect to Uniswap v3 pool contract
+// @SEE https://info.uniswap.org/#/pools to search for pool contract address
 // 0xc63b0708e2f7e69cb8a1df0e1389a98c35a76d52 = FRAX/USDC
 // 0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8 = USDC/ETH
 // 0xcbcdf9626bc03e24f779434178a73a0b4bad62ed = WBTC/ETH
