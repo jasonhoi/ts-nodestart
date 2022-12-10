@@ -20,7 +20,10 @@ dotenv.config();
 
 const parseUnits = ethers.utils.parseUnits;
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
+const provider = new ethers.providers.JsonRpcProvider(
+    'https://rpc.flashbots.net'
+);
+// const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
 
 // connect to Uniswap v3 Quoter contract
 const quoterAddress = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
