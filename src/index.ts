@@ -24,9 +24,7 @@ const parseUnits = ethers.utils.parseUnits;
 
 // ETH RPC network provider
 // const provider = new ethers.providers.JsonRpcProvider(process.env.MAINNET_RPC);
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://rpc.flashbots.net"
-);
+const provider = new ethers.providers.JsonRpcProvider("https://rpc.flashbots.net");
 
 // connect to Uniswap v3 Quoter contract
 const quoterAddress = "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6";
@@ -38,11 +36,7 @@ const quoterContract = new ethers.Contract(quoterAddress, QuoterABI, provider);
 // 0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8 = USDC/ETH
 // 0xcbcdf9626bc03e24f779434178a73a0b4bad62ed = WBTC/ETH
 const poolAddress = "0xa6cc3c2531fdaa6ae1a3ca84c2855806728693e8";
-const poolContract = new ethers.Contract(
-  poolAddress,
-  IUniswapV3PoolABI,
-  provider
-);
+const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider);
 
 async function main() {
   // query the state and immutable variables of the pool
@@ -51,35 +45,15 @@ async function main() {
     Uniswap.getPoolState(poolContract),
   ]);
 
-  const token0Contract = new ethers.Contract(
-    immutables.token0,
-    ERC20ABI,
-    provider
-  );
-  const token1Contract = new ethers.Contract(
-    immutables.token1,
-    ERC20ABI,
-    provider
-  );
+  const token0Contract = new ethers.Contract(immutables.token0, ERC20ABI, provider);
+  const token1Contract = new ethers.Contract(immutables.token1, ERC20ABI, provider);
   const [token0, token1] = await Promise.all([
     ERC20.getToken(token0Contract),
     ERC20.getToken(token1Contract),
   ]);
 
-  const TokenIn = new Token(
-    1,
-    immutables.token0,
-    token0.decimals,
-    token0.symbol,
-    ""
-  );
-  const TokenOut = new Token(
-    1,
-    immutables.token1,
-    token1.decimals,
-    token1.symbol,
-    ""
-  );
+  const TokenIn = new Token(1, immutables.token0, token0.decimals, token0.symbol, "");
+  const TokenOut = new Token(1, immutables.token1, token1.decimals, token1.symbol, "");
 
   // assign an input amount for the swap
   const amountInFloat = 10;
@@ -98,15 +72,11 @@ async function main() {
   const quoteDecimalPlace = 4;
   const quotedAmountOutFloat =
     parseFloat(
-      quotedAmountOut
-        .div(parseUnits("1", TokenOut.decimals - quoteDecimalPlace))
-        .toString()
+      quotedAmountOut.div(parseUnits("1", TokenOut.decimals - quoteDecimalPlace)).toString()
     ) /
     10 ** quoteDecimalPlace;
 
-  console.log(
-    "--------------------------- Uniswap V3 exchange quote ---------------------------"
-  );
+  console.log("--------------------------- Uniswap V3 exchange quote ---------------------------");
   console.log(
     `Token In: ${TokenIn.symbol}, decimal place ${TokenIn.decimals}, contract ${TokenIn.address}`
   );
@@ -118,9 +88,7 @@ async function main() {
       4
     )} : ${quotedAmountOutFloat.toFixed(quoteDecimalPlace)}`
   );
-  console.log(
-    `Ex. rate (out amount/in amount) = ${quotedAmountOutFloat / amountInFloat}`
-  );
+  console.log(`Ex. rate (out amount/in amount) = ${quotedAmountOutFloat / amountInFloat}`);
   console.log(`Pool fee tier: ${immutables.fee / 10000}%`);
   console.log(`Pool liquidity: ${state.liquidity.toString()}`);
 }

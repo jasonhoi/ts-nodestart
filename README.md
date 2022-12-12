@@ -21,10 +21,11 @@ npm install -g typescript
 # install node modules
 npm install
 
-# build ts to js
-npm run build
-
 # build + run
 npm run start
+
+# @dev in order to control code formatting, please also install `prettier` global npm module, 
+# it will use .prettierrc config to format your code on save
+npm install -g prettier
 
 ```
