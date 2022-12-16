@@ -10,7 +10,9 @@ import { AlphaRouter, SwapType } from "@uniswap/smart-order-router";
 import { Token, CurrencyAmount, TradeType, Percent } from "@uniswap/sdk-core";
 import Tokens from "./tokens/uniswap-default/mainnet.json" assert { type: "json" };
 import * as dotenv from "dotenv";
-import JSBI from "jsbi";
+// import JSBI from "jsbi";
+import * as JSBI from "../node_modules/jsbi/jsbi.js";
+
 dotenv.config();
 
 // shortcut alias
