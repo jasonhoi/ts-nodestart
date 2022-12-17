@@ -1,13 +1,13 @@
 {
   "name": "ts-nodestart",
   "version": "1.0.0",
-  "description": "Starter Node project in Typescript.",
+  "description": "(Typescript, node project) Uniswap V3 exchange quotation test.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/quote.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node --no-warnings --experimental-json-modules dist/index.js",
-    "quote": "npm run build && node --no-warnings --experimental-json-modules dist/autoroute.js"
+    "start": "tsc && node --no-warnings --experimental-json-modules dist/quote.js",
+    "start-single-pool": "npm run build && node --no-warnings --experimental-json-modules dist/quote-single.js"
   },
   "author": "Jason Hoi",
   "license": "MIT",
