@@ -6,8 +6,8 @@
   "main": "dist/quote.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node --no-warnings --experimental-json-modules dist/quote.js",
-    "start-single-pool": "npm run build && node --no-warnings --experimental-json-modules dist/quote-single.js"
+    "start": "tsc && node --no-warnings dist/quote.js",
+    "start-single-pool": "npm run build && node --no-warnings dist/quote-single.js"
   },
   "author": "Jason Hoi",
   "license": "MIT",
