@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node --experimental-json-modules dist/index.js",
-    "quote": "npm run build && node --experimental-json-modules dist/autoroute.js"
+    "start": "tsc && node --no-warnings --experimental-json-modules dist/index.js",
+    "quote": "npm run build && node --no-warnings --experimental-json-modules dist/autoroute.js"
   },
   "author": "Jason Hoi",
   "license": "MIT",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@uniswap/sdk-core": "^3.1.0",
-    "@uniswap/smart-order-router": "^3.3.0",
+    "@uniswap/smart-order-router": "^3.0.1",
     "@uniswap/v3-periphery": "^1.4.3",
     "@uniswap/v3-sdk": "^3.9.0",
     "dotenv": "^16.0.3",
