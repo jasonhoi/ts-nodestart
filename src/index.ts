@@ -66,7 +66,7 @@ async function main() {
     swapOptionUniversal
   );
 
-  console.log("--------------------------- Uniswap V3 exchange quote ---------------------------");
+  console.log("--------------------------- Uniswap V3 (Auto Router) ---------------------------");
   console.log(
     `Token In: ${TokenIn.symbol}, decimal place ${TokenIn.decimals}, contract ${TokenIn.address}`
   );

@@ -77,7 +77,7 @@ async function main() {
     ) /
     10 ** quoteDecimalPlace;
 
-  console.log("--------------------------- Uniswap V3 exchange quote ---------------------------");
+  console.log("--------------------------- Uniswap V3 (single-pool) ---------------------------");
   console.log(
     `Token In: ${TokenIn.symbol}, contract ${TokenIn.address}, decimal place ${TokenIn.decimals}`
   );
