@@ -68,10 +68,10 @@ async function main() {
 
   console.log("--------------------------- Uniswap V3 (Auto Router) ---------------------------");
   console.log(
-    `Token In: ${TokenIn.symbol}, decimal place ${TokenIn.decimals}, contract ${TokenIn.address}`
+    `Token In: ${TokenIn.symbol}, contract ${TokenIn.address}, decimal place ${TokenIn.decimals}`
   );
   console.log(
-    `Token Out: ${TokenOut.symbol}, decimal place ${TokenOut.decimals}, contract ${TokenOut.address}`
+    `Token Out: ${TokenOut.symbol}, contract ${TokenOut.address}, decimal place ${TokenOut.decimals}`
   );
   console.log(
     `${TokenIn.symbol} : ${TokenOut.symbol} = ${amountInFloat.toFixed(4)} : ${route.quote.toFixed(
