@@ -21,8 +21,11 @@ npm install -g typescript
 # install node modules
 npm install
 
-# build + run
+# build + run (auto router quote)
 npm run start
+
+# build + run (single-pool quote)
+npm run start-single-pool
 
 # @dev in order to control code formatting, please also install `prettier` global npm module, 
 # it will use .prettierrc config to format your code on save
